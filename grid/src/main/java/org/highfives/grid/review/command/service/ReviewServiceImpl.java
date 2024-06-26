@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.highfives.grid.review.command.aggregate.ReviewHistory;
 import org.highfives.grid.review.command.aggregate.ReviewList;
 import org.highfives.grid.review.command.aggregate.ReviewStatus;
+import org.highfives.grid.review.command.dao.ReviewMapper;
 import org.highfives.grid.review.command.dto.ReviewDTO;
 import org.highfives.grid.review.command.dto.ReviewHistoryDTO;
 import org.highfives.grid.review.command.dto.ReviewListDTO;
@@ -40,15 +41,20 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ModelMapper mapper;
 
+    private final ReviewMapper reviewMapper;
+
     @Autowired
     public ReviewServiceImpl(ReviewRepository reviewRepository, ReviewListRepository reviewListRepository,
-                             ReviewHistoryRepository reviewHistoryRepository, UserRepository userRepository, ModelMapper mapper) {
+                             ReviewHistoryRepository reviewHistoryRepository, UserRepository userRepository, ModelMapper mapper, ReviewMapper reviewMapper) {
         this.reviewRepository = reviewRepository;
         this.reviewListRepository = reviewListRepository;
         this.reviewHistoryRepository = reviewHistoryRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
+        this.reviewMapper = reviewMapper;
     }
+
+
 
 
     @Override
@@ -200,7 +206,7 @@ public class ReviewServiceImpl implements ReviewService {
                             .build();
 
                     reviewHistoryRepository.save(reviewHistory);
-                    reviewHistoryDTOList.add(mapper.map(reviewHistory, ReviewHistoryDTO.class));
+                    reviewMapper.reviewHistoryToReviewHistoryDTO(reviewHistory);
                 }
             }
         }
